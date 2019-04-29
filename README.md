@@ -2,8 +2,6 @@
 
 ## Graphql Yoga server + Prisma DB + JWT Authentication
 
-TODO BEFORE PUSH: remove endpoint from prisma.yml
-
 ---
 
 ## Installation
