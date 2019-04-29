@@ -1,5 +1,4 @@
-#endpoint: ''
-endpoint: https://us1.prisma.sh/tanner-gaucher/graphql-backend/dev
+endpoint: ''
 
 datamodel: datamodel.prisma
 
