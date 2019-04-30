@@ -1,6 +1,6 @@
 # GraphQL Backend Boilerplate
 
-## Graphql Yoga Server + Prisma DB + JWT Authentication
+GraphQL Yoga Server 🧘 + Prisma DB 💾 + JWT authentication 🔑
 
 ---
 
