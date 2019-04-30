@@ -10,6 +10,9 @@ const Query = {
 
     return context.prisma.user({ id: userId })
   },
+  users: async (parent, args, context) => {
+    return context.prisma.users()
+  },
 }
 
 module.exports = {
