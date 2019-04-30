@@ -36,7 +36,6 @@ const Mutation = {
     }
   },
   logout: (parent, { id }, context) => {
-    //
     return { message: 'Goodbye' }
   },
 }

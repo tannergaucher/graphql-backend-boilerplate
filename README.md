@@ -1,37 +1,51 @@
 # GraphQL Backend Boilerplate
 
-## Graphql Yoga server + Prisma DB + JWT Authentication
+## Graphql Yoga Server + Prisma DB + JWT Authentication
 
 ---
 
 ## Installation
 
-- Remove `.sample` suffix from the environment variables file to make it `.env`
+Remove `.sample` suffix from the environment variables file to make it `.env`
 
-- `npm install`
+`npm install`
 
-- Make sure prisma-cli is installed globally `npm install -g prisma`
+`npm install -g prisma` to make sure prisma CLI is installed globally
 
-- Authenticate with prisma via the cli: `prisma login`
+`prisma login` to authenticate with prisma from the CLI
 
-- Deploy datamodel to Prisma: `prisma deploy`
+`prisma deploy` to datamodel to prisma to demo cloud server
 
 - Key down to select demo server option:
 
 - **_'Or deploy to an existing Prisma server:"_**
 
-  Then choose:
+- Then choose:
 
-  **_Demo server + MySQL database in Prisma Cloud_**
+- **_Demo server + MySQL database in Prisma Cloud_**
 
-- Chose region of hosted demo server
-  and hit `enter` for default server names
+`enter` to select region and default server names
 
-- Finally, start server: `npm start` and visit http://localhost:4000 to see your graphQL playground
+`prisma seed` Seed the database with mocked user data from '/prisma/seed.js' by running
 
-## Testing backend with GraphQL Playground
+`npm start` visit http://localhost:4000 to view the api in GraphQL Playground
 
-### Sign up a user:
+## Testing the API with GraphQL Playground
+
+### Query the seeded users from the database
+
+```graphql
+{
+  users {
+    id
+    name
+    password
+    email
+  }
+}
+```
+
+### Create a user with the `signup` mutation
 
 ```graphql
 mutation {
@@ -47,9 +61,9 @@ mutation {
 }
 ```
 
-### Test an authenticated query using http headers in graphql playgrounnd:
+### Form an authenticated query using HTTP headers
 
-Copy the token returned from the above `signup` mutation and place in the HTTP Headers section of the playground like so:
+Copy the token returned from the above `signup` mutation and place in the HTTP Headers section of the GraphQL playground like so:
 
 ```json
 {
@@ -72,4 +86,78 @@ Note the space between Bearer and token
 }
 ```
 
-This query gets the user id from the JWT pasted into the headers and returns the user's information
+This query gets the user id from the JWT pasted into the headers and returns that user
+
+---
+
+Next Steps
+
+When creating relations in the datamodel, [type resolvers](https://www.prisma.io/tutorials/a-guide-to-common-resolver-patterns-ct08) must be added to `/src/resolvers` in order to resolve nested relations
+
+For example, we add a relation between type User and type List to the datamodel
+
+```
+type User {
+  id: ID! @id
+  name: String!
+  email: String! @unique
+  password: String!
+  lists: [List!]  # relation to List
+}
+
+type List {
+  id: ID! @id
+  title: String!
+  user: User!  # relation to User
+}
+```
+
+After creating data for that relation, in order to query the lists of a User, add a type resolver to `/src/resolvers`
+
+Inside `/src/resolvers/User.js`
+
+```js
+const User = {
+  lists: ({ id }, args, context) => {
+    return context.prisma.user({ id }).lists()
+  },
+}
+
+module.exports = {
+  User,
+}
+```
+
+Inside `/src/resolvers/List.js`
+
+```js
+const List = {
+  user: ({ id }, args, context) => {
+    return context.prisma.list({ id }).user()
+  },
+}
+
+module.exports = {
+  List,
+}
+```
+
+Finally, import those relations into `/src/resolvers/index.js`
+
+```js
+const { Query } = require('./Query')
+const { Mutation } = require('./Mutation')
+const { User } = require('./User')
+const { List } = require('./List')
+
+const resolvers = {
+  Query,
+  Mutation,
+  User,
+  List,
+}
+
+module.exports = {
+  resolvers,
+}
+```
