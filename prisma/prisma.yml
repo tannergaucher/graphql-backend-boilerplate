@@ -1,5 +1,3 @@
-#endpoint: ''
-
 datamodel: datamodel.prisma
 
 generate:
@@ -12,3 +10,5 @@ hooks:
 
 seed:
   run: node ./prisma/seed.js
+
+endpoint: https://heroku-demo-4bfe75293e.herokuapp.com/graphql-backend-boilerplate/dev

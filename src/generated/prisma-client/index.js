@@ -12,6 +12,6 @@ var models = [
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `https://eu1.prisma.sh/tanner-gaucher/graphql-backend-boilerplate/dev`
+  endpoint: `https://heroku-demo-4bfe75293e.herokuapp.com/graphql-backend-boilerplate/dev`
 });
 exports.prisma = new exports.Prisma();
